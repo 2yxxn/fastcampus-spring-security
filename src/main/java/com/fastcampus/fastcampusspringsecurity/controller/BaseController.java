@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class BaseController {
-    @GetMapping
+    @GetMapping("/")
     public String rootPage() {
         return "index";
     }
@@ -13,5 +13,10 @@ public class BaseController {
     @GetMapping("/home")
     public String homePage() {
         return "index";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }
