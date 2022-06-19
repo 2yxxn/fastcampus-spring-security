@@ -1,16 +1,23 @@
 package com.fastcampus.fastcampusspringsecurity.config;
 
+import com.fastcampus.fastcampusspringsecurity.domain.User;
+import com.fastcampus.fastcampusspringsecurity.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
+    private final UserService userService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // filter
@@ -56,10 +63,17 @@ public class SpringSecurityConfig {
                 .antMatchers("/images/**", "/css/**", "/error", "/favicon", "/h2-console/**");
     }
 
-    // TODO: UserService 코드 작성 후 마저 작성
     // username 으로 user 찾는 방법
+    // user 은 UserDetailsService 를 상속받고 있기 때문에 그냥 리턴해도 됨
     @Bean
     public UserDetailsService userDetailsService() {
-        return null;
+        return username -> {
+            User user = userService.findByUsername(username);
+
+            if (user == null)
+                throw new UsernameNotFoundException(username);
+
+            return user;
+        };
     }
 }
