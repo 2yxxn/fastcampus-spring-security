@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
         // "/notice" 의 POST, DELETE : 관리자에게만 허용
         // 그 외의 모든 요청은 인증을 받은 사람에게만 허용
         http.authorizeRequests()
-                .antMatchers("/", "/home", "signup").permitAll()
+                .antMatchers("/", "/home", "/signup").permitAll()
                 .antMatchers("/note").hasRole("USER")
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/notice").hasRole("ADMIN")
